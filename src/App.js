@@ -49,7 +49,9 @@ class App extends Component {
           })
         }
 
-        // Set ether balance
+        /************************
+        * Set ETH balance below *
+        ************************/
         this.web3.eth.getBalance(defaultAccount, (err, ethBalance) => {
           this.setState({ ethBalance })
         })
@@ -62,21 +64,30 @@ class App extends Component {
             const token = this.web3.eth.contract(tokenArtiacts.abi).at(tokenAddress)
             this.setState({ token })
 
-            // load token balance, note metamask does not support async
+            /**************************
+            * Set token balance below *
+            **************************/
             token.balanceOf(defaultAccount, (err, tokenBalance) => {
               this.setState({ tokenBalance })
             })
 
-            // Get token symbol
+            /*************************
+            * Set token sybmol below *
+            *************************/
             token.symbol((err, tokenSymbol) => {
               this.setState({ tokenSymbol })
             })
 
-            // Get token decimal places
+            /*********************************
+            * Set token decimal places below *
+            *********************************/
             token.decimals((err, tokenDecimals) => {
               this.setState({ tokenDecimals })
             })
 
+            /********************************
+            * Call loadEventListeners below *
+            ********************************/
             this.loadEventListeners()
           } else {
             console.error('Token has not been deployed to the detected network.')
@@ -94,12 +105,16 @@ class App extends Component {
    */
   loadAccountBalances(account) {
     if (this.state.token) {
-      // Token balance
+      /**************************
+      * Set token balance below *
+      **************************/
       this.state.token.balanceOf(account, (err, tokenBalance) => {
         this.setState({ tokenBalance })
       })
 
-      // Ether balance
+      /**************************
+      * Set ETH balance below *
+      **************************/
       this.web3.eth.getBalance(account, (err, ethBalance) => {
         this.setState({ ethBalance })
       })
@@ -110,21 +125,27 @@ class App extends Component {
    * Create listeners for all events.
    */
   loadEventListeners() {
-    // Tokens minted
+    /**********************************
+    * Watch tokens minted event below *
+    **********************************/
     this.state.token.LogTokensMinted({ fromBlock: 'latest', toBlock: 'latest' })
     .watch((err, res) => {
       alert('Tokens Minted!')
       this.loadAccountBalances(this.web3.eth.accounts[this.state.defaultAccount])
     })
 
-    // Tokens transferred
+    /************************************
+    * Watch tokens transfer event below *
+    ************************************/
     this.state.token.Transfer({ fromBlock: 'latest', toBlock: 'latest' })
     .watch((err, res) => {
       alert('Tokens Transferred!')
       this.loadAccountBalances(this.web3.eth.accounts[this.state.defaultAccount])
     })
 
-    // Error emitted
+    /**********************************
+    * Watch error emitted event below *
+    **********************************/
     this.state.token.LogErrorString({ fromBlock: 'latest', toBlock: 'latest' })
     .watch((err, res) => {
       alert(res.args.errorString)
@@ -139,6 +160,9 @@ class App extends Component {
   mint(user, amount) {
     // Confirm user seems to be a valid address
     if (user.length === 42 && amount > 0) {
+      /*********************
+      * Execute mint below *
+      *********************/
       this.state.token.mint(
         user,
         amount*10**this.state.tokenDecimals, // Convert to correct decimal places
@@ -159,6 +183,9 @@ class App extends Component {
   transfer(user, amount) {
     // Confirm user seems to be a valid address
     if (user.length === 42 && amount > 0) {
+      /*******************************
+      * Execute token transfer below *
+      *******************************/
       this.state.token.transfer(
         user,
         amount*10**this.state.tokenDecimals, // Convert to correct decimal places
