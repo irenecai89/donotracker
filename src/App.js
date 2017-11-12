@@ -63,6 +63,10 @@ class App extends Component {
             const tokenAddress = tokenArtiacts.networks[netId].address
             const token = this.web3.eth.contract(tokenArtiacts.abi).at(tokenAddress)
             this.setState({ token })
+            console.log(token)
+
+            // Bind to window for testing
+            window.token = token
 
             /**************************
             * Set token balance below *
