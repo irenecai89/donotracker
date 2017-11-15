@@ -211,88 +211,89 @@ class App extends Component {
   }
 
   render() {
+    let component
+
+    component = <div>
+      <h3>Active Account</h3>
+      <DropDownMenu
+        maxHeight={300}
+        width={500}
+        value={this.state.defaultAccount}
+        onChange={this.handleDropDownChange}
+      >
+        {this.state.availableAccounts}
+      </DropDownMenu>
+
+      <h3>Balances</h3>
+      <p className="App-intro">{this.state.ethBalance / 1e18} ETH</p>
+      <p className="App-intro">
+        {this.state.tokenBalance / 10**this.state.tokenDecimals} {this.state.tokenSymbol}
+      </p>
+      <br />
+      <div>
+        <h3>Mint Tokens</h3>
+        <TextField
+          floatingLabelText="User to mint tokens to."
+          style={{width: 400}}
+          value={this.state.mintUser}
+          onChange={(e, mintUser) => {
+            this.setState({ mintUser })
+          }}
+        />
+
+        <TextField
+          floatingLabelText="Amount."
+          style={{width: 100}}
+          value={this.state.mintAmount}
+          onChange={(e, mintAmount) => {
+            this.setState({ mintAmount })
+          }}
+        />
+
+        <RaisedButton
+          label="Mint"
+          labelPosition="before"
+          primary={true}
+          onClick={() => this.mint(this.state.mintUser, this.state.mintAmount)}
+        />
+      </div>
+      <br />
+      <div>
+        <h3>Transfer Tokens</h3>
+        <TextField
+          floatingLabelText="User to transfer tokens to."
+          style={{width: 400}}
+          value={this.state.transferUser}
+          onChange={(e, transferUser) => {
+            this.setState({ transferUser })
+          }}
+        />
+
+        <TextField
+          floatingLabelText="Amount."
+          style={{width: 100}}
+          value={this.state.amount}
+          onChange={(e, transferAmount) => {
+            this.setState({ transferAmount })
+          }}
+        />
+
+        <RaisedButton
+          label="Transfer"
+          labelPosition="before"
+          primary={true}
+          onClick={() => this.transfer(this.state.transferUser, this.state.transferAmount)}
+        />
+      </div>
+    </div>
+
     return (
       <MuiThemeProvider>
         <div className="App">
           <header className="App-header">
             <img src={logo} alt="logo" style={{height: '150px', width: '350px'}}/>
           </header>
-
-          <h3>Active Account</h3>
-          <DropDownMenu
-            maxHeight={300}
-            width={500}
-            value={this.state.defaultAccount}
-            onChange={this.handleDropDownChange}
-          >
-            {this.state.availableAccounts}
-          </DropDownMenu>
-
-          <h3>Balances</h3>
-          <p className="App-intro">{this.state.ethBalance / 1e18} ETH</p>
-          <p className="App-intro">
-            {this.state.tokenBalance / 10**this.state.tokenDecimals} {this.state.tokenSymbol}
-          </p>
-
-          <br />
-
-          <div>
-            <h3>Mint Tokens</h3>
-            <TextField
-              floatingLabelText="User to mint tokens to."
-              style={{width: 400}}
-              value={this.state.mintUser}
-              onChange={(e, mintUser) => {
-                this.setState({ mintUser })
-              }}
-            />
-
-            <TextField
-              floatingLabelText="Amount."
-              style={{width: 100}}
-              value={this.state.mintAmount}
-              onChange={(e, mintAmount) => {
-                this.setState({ mintAmount })
-              }}
-            />
-
-            <RaisedButton
-              label="Mint"
-              labelPosition="before"
-              primary={true}
-              onClick={() => this.mint(this.state.mintUser, this.state.mintAmount)}
-            />
-          </div>
-
-          <br />
-
-          <div>
-            <h3>Transfer Tokens</h3>
-            <TextField
-              floatingLabelText="User to transfer tokens to."
-              style={{width: 400}}
-              value={this.state.transferUser}
-              onChange={(e, transferUser) => {
-                this.setState({ transferUser })
-              }}
-            />
-
-            <TextField
-              floatingLabelText="Amount."
-              style={{width: 100}}
-              value={this.state.amount}
-              onChange={(e, transferAmount) => {
-                this.setState({ transferAmount })
-              }}
-            />
-
-            <RaisedButton
-              label="Transfer"
-              labelPosition="before"
-              primary={true}
-              onClick={() => this.transfer(this.state.transferUser, this.state.transferAmount)}
-            />
-          </div>
+          {component}
         </div>
       </MuiThemeProvider>
     );
