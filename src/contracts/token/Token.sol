@@ -155,14 +155,14 @@ contract Token is ERC20, LoggingErrors {
   // Constants
 
   /**
-   * @return total amount of tokens.
+   * @return the allowance the owner gave the spender
    */
-  function totalSupply()
+  function allowance(address _owner, address _spender)
     external
     constant
-    returns (uint256)
+    returns(uint256)
   {
-    return totalSupply_;
+    return allowed_[_owner][_spender];
   }
 
   /**
@@ -176,5 +176,16 @@ contract Token is ERC20, LoggingErrors {
     returns (uint256)
   {
     return balances_[_owner];
+  }
+
+  /**
+   * @return total amount of tokens.
+   */
+  function totalSupply()
+    external
+    constant
+    returns (uint256)
+  {
+    return totalSupply_;
   }
 }
