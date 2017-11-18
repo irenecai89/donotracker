@@ -134,7 +134,7 @@ class App extends Component {
     **********************************/
     this.state.token.LogTokensMinted({ fromBlock: 'latest', toBlock: 'latest' })
     .watch((err, res) => {
-      alert('Tokens Minted!')
+      console.log(`Tokens Minted! TxHash: https://kovan.etherscan.io/tx/${res.transactionHash}`)
       this.loadAccountBalances(this.web3.eth.accounts[this.state.defaultAccount])
     })
 
@@ -143,7 +143,7 @@ class App extends Component {
     ************************************/
     this.state.token.Transfer({ fromBlock: 'latest', toBlock: 'latest' })
     .watch((err, res) => {
-      alert('Tokens Transferred!')
+      console.log(`Tokens Transferred! TxHash: https://kovan.etherscan.io/tx/${res.transactionHash}`)
       this.loadAccountBalances(this.web3.eth.accounts[this.state.defaultAccount])
     })
 
@@ -152,7 +152,7 @@ class App extends Component {
     **********************************/
     this.state.token.LogErrorString({ fromBlock: 'latest', toBlock: 'latest' })
     .watch((err, res) => {
-      alert(res.args.errorString)
+      console.error(res.args.errorString)
     })
   }
 
@@ -172,8 +172,8 @@ class App extends Component {
         amount*10**this.state.tokenDecimals, // Convert to correct decimal places
         { from: this.web3.eth.accounts[this.state.defaultAccount] },
         (err, res) => {
-          console.log(err)
-          console.log(res)
+          if (err) console.error(err)
+          else console.log(res)
         }
       )
     }
@@ -195,8 +195,8 @@ class App extends Component {
         amount*10**this.state.tokenDecimals, // Convert to correct decimal places
         { from: this.web3.eth.accounts[this.state.defaultAccount] },
         (err, res) => {
-          console.log(err)
-          console.log(res)
+          if (err) console.error(err)
+          else console.log(res)
         }
       )
     }
@@ -215,73 +215,35 @@ class App extends Component {
 
     component = <div>
       <h3>Active Account</h3>
-      <DropDownMenu
-        maxHeight={300}
-        width={500}
-        value={this.state.defaultAccount}
-        onChange={this.handleDropDownChange}
-      >
+      <DropDownMenu maxHeight={300} width={500} value={this.state.defaultAccount} onChange={this.handleDropDownChange}>
         {this.state.availableAccounts}
       </DropDownMenu>
-
       <h3>Balances</h3>
       <p className="App-intro">{this.state.ethBalance / 1e18} ETH</p>
-      <p className="App-intro">
-        {this.state.tokenBalance / 10**this.state.tokenDecimals} {this.state.tokenSymbol}
-      </p>
+      <p className="App-intro"> {this.state.tokenBalance / 10**this.state.tokenDecimals} {this.state.tokenSymbol}</p>
       <br />
       <div>
         <h3>Mint Tokens</h3>
-        <TextField
-          floatingLabelText="User to mint tokens to."
-          style={{width: 400}}
-          value={this.state.mintUser}
-          onChange={(e, mintUser) => {
-            this.setState({ mintUser })
-          }}
+        <TextField floatingLabelText="User to mint tokens to." style={{width: 400}} value={this.state.mintUser}
+          onChange={(e, mintUser) => {this.setState({ mintUser })}}
         />
-
-        <TextField
-          floatingLabelText="Amount."
-          style={{width: 100}}
-          value={this.state.mintAmount}
-          onChange={(e, mintAmount) => {
-            this.setState({ mintAmount })
-          }}
+        <TextField floatingLabelText="Amount." style={{width: 100}} value={this.state.mintAmount}
+          onChange={(e, mintAmount) => {this.setState({ mintAmount })}}
         />
-
-        <RaisedButton
-          label="Mint"
-          labelPosition="before"
-          primary={true}
+        <RaisedButton label="Mint" labelPosition="before" primary={true}
           onClick={() => this.mint(this.state.mintUser, this.state.mintAmount)}
         />
       </div>
       <br />
       <div>
         <h3>Transfer Tokens</h3>
-        <TextField
-          floatingLabelText="User to transfer tokens to."
-          style={{width: 400}}
-          value={this.state.transferUser}
-          onChange={(e, transferUser) => {
-            this.setState({ transferUser })
-          }}
+        <TextField floatingLabelText="User to transfer tokens to." style={{width: 400}} value={this.state.transferUser}
+          onChange={(e, transferUser) => { this.setState({ transferUser }) }}
         />
-
-        <TextField
-          floatingLabelText="Amount."
-          style={{width: 100}}
-          value={this.state.amount}
-          onChange={(e, transferAmount) => {
-            this.setState({ transferAmount })
-          }}
+        <TextField floatingLabelText="Amount." style={{width: 100}} value={this.state.amount}
+          onChange={(e, transferAmount) => { this.setState({ transferAmount })}}
         />
-
-        <RaisedButton
-          label="Transfer"
-          labelPosition="before"
-          primary={true}
+        <RaisedButton label="Transfer" labelPosition="before" primary={true}
           onClick={() => this.transfer(this.state.transferUser, this.state.transferAmount)}
         />
       </div>
