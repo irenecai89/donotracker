@@ -66,10 +66,9 @@ class App extends Component {
             })
 
             this.loadEventListeners()
+            this.loadAccountBalances(defaultAccount)
           }
         })
-
-        this.loadAccountBalances(defaultAccount)
       })
     }
   }
