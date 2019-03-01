@@ -1,39 +1,17 @@
 pragma solidity ^0.4.24;
 
-/**
- * @title Token Sample
- * @author Adam Lemmon <adam@blockchainlearninggroup.com>
- */
+
 contract Token {
   string public constant symbol = 'BLG';
-  string public constant name = 'Blockchain Learning Group Community Token';
-  uint public constant decimals = 18;
+  string public constant name = 'Blockchain Learning Group Token';
   uint public constant rate = 2;  // rate of token / wei for purchase
   uint256 private totalSupply_;
   mapping (address => uint256) private balances_;
-  mapping(address => mapping (address => uint256)) private allowed_;
-  address private owner_; // EOA
 
-  event Approval(address indexed owner, address indexed spender, uint value);
   event Transfer(address indexed from, address indexed to, uint value);
   event TokensMinted(address indexed to, uint256 value, uint256 totalSupply);
 
-  constructor() {
-    owner_ = msg.sender;
-  }
-
-  // @dev Approve a user to spend your tokens.
-  function approve(address _spender, uint256 _amount)
-    external
-    returns (bool)
-  {
-    require(_amount > 0, 'Can not approve an amount <= 0, Token.approve()');
-    require(_amount <= balances_[msg.sender], 'Amount is greater than senders balance, Token.approve()');
-
-    allowed_[msg.sender][_spender] += _amount;  // NOTE overflow
-
-    return true;
-  }
+  constructor() {}
 
   // Buy tokens with ether, mint and allocate new tokens to the purchaser.
   function buy() external payable returns (bool)
@@ -66,34 +44,6 @@ contract Token {
     emit Transfer(msg.sender, _to, _value);
 
     return true;
-  }
-
-  // Tranfer on behalf of a user, from one address to another
-  function transferFrom(address _from, address _to, uint256 _amount)
-    external
-    returns (bool)
-  {
-    require(_amount <= 0, 'Cannot transfer amount <= 0, Token.transferFrom()');
-    require(_amount <= balances_[_from], 'From account has an insufficient balance, Token.transferFrom()');
-    require(_amount <= allowed_[_from][msg.sender], 'msg.sender has insufficient allowance, Token.transferFrom()');
-
-    balances_[_from] -= _amount; // NOTE underflow
-    balances_[_to] += _amount;  // NOTE overflow
-
-    allowed_[_from][msg.sender] -= _amount;  // NOTE underflow
-
-    emit Transfer(_from, _to, _amount);
-
-    return true;
-  }
-
-  // @return the allowance the owner gave the spender
-  function allowance(address _owner, address _spender)
-    external
-    constant
-    returns(uint256)
-  {
-    return allowed_[_owner][_spender];
   }
 
   // return the address' balance
