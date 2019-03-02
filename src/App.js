@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Route, Link } from 'react-router-dom';
 import logo from './blg.jpg';
 import './App.css';
 // Import the web3 library
@@ -106,6 +107,9 @@ class App extends Component {
     let component;
 
     component = <div>
+      <Link to={'newPage'}>
+        <RaisedButton label=">>> New Page" secondary={true} fullWidth={true}/>
+      </Link>
       <h3>Active Account</h3>
       <DropDownMenu maxHeight={300} width={500} value={this.state.defaultAccount} onChange={this.handleDropDownChange}>
         {this.state.availableAccounts}
@@ -140,13 +144,24 @@ class App extends Component {
       </div>
     </div>
 
+    const newPage = <div>
+      <Link to={'/'}>
+        <RaisedButton label="Wallet <<<" primary={true} fullWidth={true}/>
+      </Link>
+    </div>
+
     return (
       <MuiThemeProvider>
         <div className="App">
           <header className="App-header">
             <img src={logo} alt="logo" style={{height: '150px', width: '350px'}}/>
           </header>
-          {component}
+          <BrowserRouter>
+            <div>
+              <Route exact={true} path="/" render={() => component}/>
+              <Route exact={true} path="/newPage" render={() => newPage} />
+            </div>
+          </BrowserRouter>
         </div>
       </MuiThemeProvider>
     );
